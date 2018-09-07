@@ -107,6 +107,7 @@ class Staff(models.Model):
     education                                   =  models.CharField(default='',max_length=64)
     experience                                  =  models.CharField(default='',max_length=64)
 
+
     def embed(self):
         return {
             'uuid':self.uuid,
