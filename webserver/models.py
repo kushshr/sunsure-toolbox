@@ -11,24 +11,13 @@ from django.utils import timezone
 from django.conf import settings
 # Create your models here.
 
-class TestStatus(Enum):   # A subclass of Enum
-    RUNNING = 0
-    COMPLETED = 1
-    ABORTED = -1
-
-class Organization(models.Model):
-    uuid                                        =   ShortUUIDField()
-    name                                        =   models.CharField(default='',max_length=128)
-    website_url                                 =   models.CharField(default='',max_length=128)
-    created_at                                  =   models.DateTimeField(default=timezone.now)
-
 class Users(models.Model):
     uuid                                        =   ShortUUIDField()
-    organization                                =   models.CharField(default='sunsure')
+    organization                                =   models.CharField(default='sunsure', max_length=128)
     username                                    =   models.CharField(default='',null=False,max_length=128)
     email                                       =   models.CharField(default='',null=False,unique=True,max_length=255)
     password                                    =   models.CharField(default='',max_length=128)
-    designation                                 =   models.CharField(default='')
+    designation                                 =   models.CharField(default='', max_length=128)     #will decide permissons.
 
     def set_password(self, raw_password):
         """Sets the user's password - always use this rather than directly
@@ -49,26 +38,15 @@ class Users(models.Model):
 
 class ProjectManagers(models.Model):
     uuid                                        =   ShortUUIDField()
-    name                                        =   models.CharField(default='')
-
-    def __init__(self,name=''):
-        self.name = ''
+    name                                        =   models.CharField(default='', max_length=256)
 
 class Projects(models.Model):
     uuid                                        =   ShortUUIDField()
-    name                                        =   models.CharField(default='')
+    name                                        =   models.CharField(default='', max_length=256)
     manager                                     =   models.ForeignKey(ProjectManagers,null=False)
-    size                                        =   models.CharField(default='')
-    location                                    =   models.CharField(default='')
-    site_in_charge                              =   models.CharField(default='')
-
-    def __init__(self, name = '', manager='', size='', location='', site_in_charge=''):
-        self.name = name
-        self.manager = manager
-        self.size  = size
-        self.location = location
-        self.site_in_charge = site_in_charge
-
+    size                                        =   models.CharField(default='', max_length=256)
+    location                                    =   models.CharField(default='', max_length=256)
+    site_in_charge                              =   models.CharField(default='', max_length=256)
 
     def embed(self):
         return {
@@ -81,11 +59,11 @@ class Projects(models.Model):
 
 class Contractors(models.Model):
     uuid                                        =  ShortUUIDField()
-    project                                     =  models.ForeignKey(Project,null=True)
-    name                                        =  models.CharField(default='')
-    head_office                                 =  models.CharField(default='')
-    staff_strength                              =  models.CharField(default='')
-    expertise                                   =  models.CharField(default='')
+    project                                     =  models.ForeignKey(Projects,null=True)
+    name                                        =  models.CharField(default='', max_length=256)
+    head_office                                 =  models.CharField(default='', max_length=256)
+    staff_strength                              =  models.CharField(default='', max_length=256)
+    expertise                                   =  models.CharField(default='', max_length=256)
 
     def embed(self):
         return {
@@ -99,9 +77,9 @@ class Contractors(models.Model):
 
 class Staff(models.Model):
     uuid                                        =  ShortUUIDField()
-    project                                     =  models.ForeignKey(Project,null=True)
+    project                                     =  models.ForeignKey(Projects,null=True)
     contractor                                  =  models.ForeignKey(Contractors,null=False)
-    name                                        =  models.CharField(default='')
+    name                                        =  models.CharField(default='', max_length=256)
     dob                                         =  models.DateTimeField(default=timezone.now)
     skill                                       =  models.CharField(default='',max_length=64)
     education                                   =  models.CharField(default='',max_length=64)
@@ -122,4 +100,3 @@ class Staff(models.Model):
 class Permission(models.Model):
     user                                        =   models.ForeignKey(Users)
     status                                      =   models.BooleanField(default=True)
-
