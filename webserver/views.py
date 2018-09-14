@@ -62,6 +62,5 @@ def fetch_project_details(request):
             contractors.append(c.embed())
         return HttpResponse(json.dumps(default_response(status=False, msg=" Project Created", data={'project':project.embed(), 'contractors':contractors})))
 
-def fetch_project_names(request):
 
 
