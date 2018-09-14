@@ -46,3 +46,22 @@ def create_contractor_for_project(request):
     name = value_from_req(request, 'name', '')
     size = value_from_req(request, 'size', '')
     location = value_from_req(request, 'location', '')
+
+def add_contractor(request):
+    name = value_from_req(request,'name','')
+    email = value_from_req(request, 'email','')
+    type = value_from_req(request, 'type','')
+
+def fetch_project_details(request):
+    name = value_from_req(request, 'name', '')
+    project = Projects.objects.filter(name=name).first()
+    if project:
+        cs = Contractors.objects.filter(project=project)
+        contractors = []
+        for c in cs:
+            contractors.append(c.embed())
+        return HttpResponse(json.dumps(default_response(status=False, msg=" Project Created", data={'project':project.embed(), 'contractors':contractors})))
+
+def fetch_project_names(request):
+
+

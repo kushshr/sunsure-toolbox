@@ -52,7 +52,7 @@ class Projects(models.Model):
         return {
             'uuid':self.uuid,
             'name':self.name,
-            'manager':self.manager,
+            'manager':self.manager_id,
             'size':self.size,
             'location':self.location,
         }
